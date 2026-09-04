@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameShop</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+
+            <button class="logo" onclick="showSection('store')">
+                GAMESHOP
+            </button>
+
+            <nav class="nav">
+                <button class="nav-link active" data-section="store">
+                    Tienda
+                </button>
+
+                <button class="nav-link" data-section="library">
+                    Biblioteca
+                </button>
+
+                <button class="nav-link" data-section="history">
+                    Compras
+                </button>
+
+                <button
+                    class="nav-link admin-link hidden"
+                    data-section="admin"
+                    id="adminNav"
+                >
+                    Administración
+                </button>
+            </nav>
+
+            <div class="header-actions">
+
+                <div class="balance hidden" id="balanceBox">
+                    <span>Saldo</span>
+                    <strong id="balanceValue">$0,00</strong>
+                </div>
+
+                <button class="cart-button" id="cartButton">
+                    Carrito
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+
+                <button class="auth-button" id="authButton">
+                    Iniciar sesión
+                </button>
+
+                <button
+                    class="user-button hidden"
+                    id="userButton"
+                >
+                    <span id="usernameValue"></span>
+                </button>
+
+                <button
+                    class="logout-button hidden"
+                    id="logoutButton"
+                >
+                    Salir
+                </button>
+
+            </div>
+        </div>
+    </header>
+
+
+    <main>
+
+        <!-- TIENDA -->
+        <section id="storeSection" class="section active-section">
+
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">CATÁLOGO</p>
+                    <h1>Tienda</h1>
+                    <p class="section-description">
+                        Comprá juegos digitales y agregalos a tu biblioteca.
+                    </p>
+                </div>
+            </div>
+
+            <div class="store-tools">
+
+                <div class="search-box">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Buscar juegos..."
+                        autocomplete="off"
+                    >
+                </div>
+
+                <select id="genreFilter">
+                    <option value="Todos">Todos los géneros</option>
+                </select>
+
+                <select id="sortFilter">
+                    <option value="nombre">Nombre</option>
+                    <option value="precioAsc">Precio: menor a mayor</option>
+                    <option value="precioDesc">Precio: mayor a menor</option>
+                </select>
+
+            </div>
+
+            <div id="gamesGrid" class="games-grid">
+                <div class="loading">
+                    Cargando juegos...
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- BIBLIOTECA -->
+        <section id="librarySection" class="section">
+
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">TUS JUEGOS</p>
+                    <h1>Biblioteca</h1>
+                    <p class="section-description">
+                        Acá aparecen todos los juegos que compraste.
+                    </p>
+                </div>
+            </div>
+
+            <div id="libraryGrid" class="games-grid">
+                <div class="empty-state">
+                    <h2>Tu biblioteca está vacía</h2>
+                    <p>Los juegos que compres aparecerán acá.</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- HISTORIAL -->
+        <section id="historySection" class="section">
+
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">HISTORIAL</p>
+                    <h1>Compras</h1>
+                    <p class="section-description">
+                        Revisá tus compras realizadas.
+                    </p>
+                </div>
+            </div>
+
+            <div id="historyContainer" class="history-container">
+                <div class="empty-state">
+                    <h2>No hay compras</h2>
+                    <p>Tus compras aparecerán acá.</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ADMIN -->
+        <section id="adminSection" class="section">
+
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">ADMINISTRACIÓN</p>
+                    <h1>Usuarios</h1>
+                    <p class="section-description">
+                        Administrá el saldo de las cuentas.
+                    </p>
+                </div>
+            </div>
+
+            <div class="admin-container">
+
+                <div class="admin-toolbar">
+                    <button id="refreshUsersButton" class="secondary-button">
+                        Actualizar usuarios
+                    </button>
+                </div>
+
+                <div class="users-table-wrapper">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Saldo</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="usersTableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- MODAL CARRITO -->
+    <div class="modal hidden" id="cartModal">
+
+        <div class="modal-overlay" data-close-modal="cartModal"></div>
+
+        <div class="modal-box cart-modal">
+
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">COMPRA</p>
+                    <h2>Carrito</h2>
+                </div>
+
+                <button
+                    class="close-button"
+                    data-close-modal="cartModal"
+                >
+                    ×
+                </button>
+            </div>
+
+            <div id="cartItems" class="cart-items">
+            </div>
+
+            <div class="cart-footer">
+
+                <div class="cart-total">
+                    <span>Total</span>
+                    <strong id="cartTotal">$0,00</strong>
+                </div>
+
+                <button
+                    class="primary-button full-width"
+                    id="checkoutButton"
+                >
+                    Comprar
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- MODAL LOGIN / REGISTRO -->
+    <div class="modal hidden" id="authModal">
+
+        <div class="modal-overlay" data-close-modal="authModal"></div>
+
+        <div class="modal-box auth-modal">
+
+            <button
+                class="close-button modal-close"
+                data-close-modal="authModal"
+            >
+                ×
+            </button>
+
+            <div class="auth-tabs">
+
+                <button
+                    class="auth-tab active"
+                    data-auth-tab="login"
+                >
+                    Iniciar sesión
+                </button>
+
+                <button
+                    class="auth-tab"
+                    data-auth-tab="register"
+                >
+                    Registrarse
+                </button>
+
+            </div>
+
+
+            <!-- LOGIN -->
+            <form id="loginForm" class="auth-form">
+
+                <div>
+                    <p class="eyebrow">CUENTA</p>
+                    <h2>Iniciar sesión</h2>
+                </div>
+
+                <label>
+                    Email
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        required
+                    >
+                </label>
+
+                <label>
+                    Contraseña
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        required
+                    >
+                </label>
+
+                <button class="primary-button" type="submit">
+                    Iniciar sesión
+                </button>
+
+                <p class="form-message" id="loginMessage"></p>
+
+            </form>
+
+
+            <!-- REGISTRO -->
+            <form id="registerForm" class="auth-form hidden">
+
+                <div>
+                    <p class="eyebrow">CUENTA</p>
+                    <h2>Crear cuenta</h2>
+                </div>
+
+                <label>
+                    Usuario
+                    <input
+                        type="text"
+                        id="registerUsername"
+                        maxlength="50"
+                        required
+                    >
+                </label>
+
+                <label>
+                    Email
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        maxlength="100"
+                        required
+                    >
+                </label>
+
+                <label>
+                    Contraseña
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        minlength="6"
+                        required
+                    >
+                </label>
+
+                <button class="primary-button" type="submit">
+                    Crear cuenta
+                </button>
+
+                <p class="form-message" id="registerMessage"></p>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- MODAL PERFIL -->
+    <div class="modal hidden" id="profileModal">
+
+        <div class="modal-overlay" data-close-modal="profileModal"></div>
+
+        <div class="modal-box profile-modal">
+
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">CUENTA</p>
+                    <h2>Perfil</h2>
+                </div>
+
+                <button
+                    class="close-button"
+                    data-close-modal="profileModal"
+                >
+                    ×
+                </button>
+            </div>
+
+            <div class="profile-info">
+
+                <div class="profile-row">
+                    <span>Usuario</span>
+                    <strong id="profileUsername">-</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span>Email</span>
+                    <strong id="profileEmail">-</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span>Saldo</span>
+                    <strong id="profileBalance">$0,00</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span>Rol</span>
+                    <strong id="profileRole">-</strong>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- NOTIFICACIONES -->
+    <div id="notification" class="notification hidden">
+        <span id="notificationText"></span>
+    </div>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
