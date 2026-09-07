@@ -995,3 +995,40 @@ h1 {
         padding: 10px;
     }
 }
+.admin-library-tools {
+    display: flex;
+    gap: 10px;
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-library-tools select {
+    height: 40px;
+    min-width: 190px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--black);
+    color: var(--text);
+    outline: none;
+}
+
+.admin-library-tools select:focus {
+    border-color: #444;
+}
+
+.admin-library-tools button {
+    white-space: nowrap;
+}
+
+@media (max-width: 850px) {
+
+    .admin-library-tools {
+        flex-direction: column;
+    }
+
+    .admin-library-tools select,
+    .admin-library-tools button {
+        width: 100%;
+    }
+}

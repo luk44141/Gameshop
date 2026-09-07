@@ -51,10 +51,11 @@ function setupEvents() {
             const section = button.dataset.section;
 
             if (
-                (section === "library" ||
-                 section === "history" ||
-                 section === "admin")
-                &&
+                (
+                    section === "library" ||
+                    section === "history" ||
+                    section === "admin"
+                ) &&
                 !currentUser
             ) {
                 openAuthModal();
@@ -127,30 +128,54 @@ function setupEvents() {
         .addEventListener("click", loadAdminUsers);
 
 
-    document.querySelectorAll("[data-close-modal]").forEach(element => {
+    const addGameButton =
+        document.getElementById("addGameButton");
 
-        element.addEventListener("click", () => {
+    if (addGameButton) {
+        addGameButton.addEventListener(
+            "click",
+            () => manageLibraryGame("agregar_juego")
+        );
+    }
+    const removeGameButton =
+        document.getElementById("removeGameButton");
 
-            closeModal(
-                element.dataset.closeModal
-            );
+    if (removeGameButton) {
+        removeGameButton.addEventListener(
+            "click",
+            () => manageLibraryGame("sacar_juego")
+        );
+    }
+
+
+    document
+        .querySelectorAll("[data-close-modal]")
+        .forEach(element => {
+
+            element.addEventListener("click", () => {
+
+                closeModal(
+                    element.dataset.closeModal
+                );
+
+            });
 
         });
 
-    });
 
+    document
+        .querySelectorAll(".auth-tab")
+        .forEach(tab => {
 
-    document.querySelectorAll(".auth-tab").forEach(tab => {
+            tab.addEventListener("click", () => {
 
-        tab.addEventListener("click", () => {
+                switchAuthTab(
+                    tab.dataset.authTab
+                );
 
-            switchAuthTab(
-                tab.dataset.authTab
-            );
+            });
 
         });
-
-    });
 
 
     document
@@ -161,7 +186,6 @@ function setupEvents() {
     document
         .getElementById("registerForm")
         .addEventListener("submit", register);
-
 }
 
 
@@ -217,13 +241,9 @@ async function loadSession() {
         );
 
         if (data.success && data.logged) {
-
             currentUser = data.user;
-
         } else {
-
             currentUser = null;
-
         }
 
         updateUserUI();
@@ -266,13 +286,9 @@ function updateUserUI() {
     if (!currentUser) {
 
         authButton.classList.remove("hidden");
-
         userButton.classList.add("hidden");
-
         logoutButton.classList.add("hidden");
-
         balanceBox.classList.add("hidden");
-
         adminNav.classList.add("hidden");
 
         return;
@@ -280,11 +296,8 @@ function updateUserUI() {
 
 
     authButton.classList.add("hidden");
-
     userButton.classList.remove("hidden");
-
     logoutButton.classList.remove("hidden");
-
     balanceBox.classList.remove("hidden");
 
 
@@ -298,11 +311,8 @@ function updateUserUI() {
 
 
     if (currentUser.rol === "admin") {
-
         adminNav.classList.remove("hidden");
-
     } else {
-
         adminNav.classList.add("hidden");
     }
 }
@@ -325,6 +335,7 @@ async function loadGames() {
             : [];
 
         populateGenres();
+        populateAdminGames();
 
     } catch (error) {
 
@@ -406,11 +417,9 @@ function renderGames() {
                     .toLowerCase()
                     .includes(search);
 
-
             const matchesGenre =
                 activeGenre === "Todos" ||
                 game.genero === activeGenre;
-
 
             return matchesSearch &&
                    matchesGenre;
@@ -635,7 +644,6 @@ function removeFromCart(id) {
                 Number(id)
         );
 
-
     updateCartUI();
 
     renderGames();
@@ -687,6 +695,7 @@ function renderCart() {
 
     container.innerHTML =
         cart.map(game => `
+
             <div class="cart-item">
 
                 <div class="cart-item-info">
@@ -702,6 +711,7 @@ function renderCart() {
                 </div>
 
                 <div>
+
                     <strong>
                         ${money.format(
                             Number(game.precio)
@@ -714,9 +724,11 @@ function renderCart() {
                     >
                         Quitar
                     </button>
+
                 </div>
 
             </div>
+
         `).join("");
 
 
@@ -802,9 +814,7 @@ async function checkout() {
         currentUser.saldo =
             Number(data.saldo);
 
-
         cart = [];
-
 
         updateUserUI();
 
@@ -871,7 +881,6 @@ async function loadLibrary() {
 
 
         renderLibrary();
-
 
     } catch (error) {
 
@@ -1017,7 +1026,6 @@ async function loadPurchases() {
 
         renderPurchases();
 
-
     } catch (error) {
 
         console.error(error);
@@ -1073,6 +1081,7 @@ function renderPurchases() {
             const gamesHTML =
                 (purchase.juegos || [])
                     .map(game => `
+
                         <div class="purchase-game">
 
                             <strong>
@@ -1088,16 +1097,19 @@ function renderPurchases() {
                             </span>
 
                         </div>
+
                     `)
                     .join("");
 
 
             return `
+
                 <article class="purchase-card">
 
                     <div class="purchase-header">
 
                         <div>
+
                             <div class="purchase-id">
                                 COMPRA #${purchase.id}
                             </div>
@@ -1107,6 +1119,7 @@ function renderPurchases() {
                                     purchase.fecha
                                 )}
                             </div>
+
                         </div>
 
                         <div class="purchase-total">
@@ -1122,6 +1135,7 @@ function renderPurchases() {
                     </div>
 
                 </article>
+
             `;
 
         }).join("");
@@ -1135,30 +1149,25 @@ function renderPurchases() {
 async function loadAdminUsers() {
 
     if (!currentUser) {
-
         showNotification(
             "Tenés que iniciar sesión"
         );
-
         return;
     }
 
-
     if (currentUser.rol !== "admin") {
-
         showNotification(
             "No tenés permisos de administrador"
         );
-
         return;
     }
 
-
     const tbody =
-        document.getElementById(
-            "usersTableBody"
-        );
+        document.getElementById("usersTableBody");
 
+    if (!tbody) {
+        return;
+    }
 
     tbody.innerHTML = `
         <tr>
@@ -1168,42 +1177,192 @@ async function loadAdminUsers() {
         </tr>
     `;
 
-
     try {
 
         const data =
-            await apiRequest(
-                "admin.php"
-            );
-
+            await apiRequest("admin.php");
 
         if (!data.success) {
-
-            throw new Error(
-                data.message
-            );
+            throw new Error(data.message);
         }
-
 
         renderAdminUsers(
             data.usuarios || []
         );
 
+        populateAdminUsers(
+            data.usuarios || []
+        );
+
+        populateAdminGames();
 
     } catch (error) {
 
         tbody.innerHTML = `
             <tr>
                 <td colspan="6">
-                    ${escapeHTML(
-                        error.message
-                    )}
+                    ${escapeHTML(error.message)}
                 </td>
             </tr>
         `;
     }
 }
 
+
+function populateAdminUsers(users) {
+
+    const select =
+        document.getElementById(
+            "adminUserSelect"
+        );
+
+    if (!select) {
+        return;
+    }
+
+    select.innerHTML = `
+        <option value="">
+            Seleccionar usuario
+        </option>
+    `;
+
+    users.forEach(user => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = user.id;
+
+        option.textContent =
+            `${user.username} (#${user.id})`;
+
+        select.appendChild(option);
+    });
+}
+
+
+function populateAdminGames() {
+
+    const select =
+        document.getElementById(
+            "adminGameSelect"
+        );
+
+    if (!select) {
+        return;
+    }
+
+    select.innerHTML = `
+        <option value="">
+            Seleccionar juego
+        </option>
+    `;
+
+    games.forEach(game => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = game.id;
+
+        option.textContent =
+            `${game.nombre} - ${money.format(
+                Number(game.precio)
+            )}`;
+
+        select.appendChild(option);
+    });
+}
+
+
+async function manageLibraryGame(action) {
+
+    if (
+        !currentUser ||
+        currentUser.rol !== "admin"
+    ) {
+        showNotification(
+            "No tenés permisos de administrador"
+        );
+        return;
+    }
+
+    const userSelect =
+        document.getElementById(
+            "adminUserSelect"
+        );
+
+    const gameSelect =
+        document.getElementById(
+            "adminGameSelect"
+        );
+
+    if (!userSelect || !gameSelect) {
+        showNotification(
+            "No se encontraron los selectores de administración"
+        );
+        return;
+    }
+
+    const userId =
+        Number(userSelect.value);
+
+    const gameId =
+        Number(gameSelect.value);
+
+    if (!userId) {
+        showNotification(
+            "Seleccioná un usuario"
+        );
+        return;
+    }
+
+    if (!gameId) {
+        showNotification(
+            "Seleccioná un juego"
+        );
+        return;
+    }
+
+    try {
+
+        const data =
+            await apiRequest(
+                "admin.php",
+                {
+                    method: "POST",
+
+                    body: JSON.stringify({
+                        accion: action,
+                        id_usuario: userId,
+                        id_juego: gameId
+                    })
+                }
+            );
+
+        if (!data.success) {
+            throw new Error(data.message);
+        }
+
+        showNotification(
+            data.message
+        );
+
+        if (
+            currentUser &&
+            Number(currentUser.id) === userId
+        ) {
+            await loadLibrary();
+            renderGames();
+        }
+
+    } catch (error) {
+
+        showNotification(
+            error.message
+        );
+    }
+}
 
 function renderAdminUsers(users) {
 
@@ -1285,6 +1444,9 @@ function renderAdminUsers(users) {
         `).join("");
 }
 
+/* =========================
+   ACTUALIZAR SALDO
+========================= */
 
 async function updateUserBalance(id) {
 
@@ -1303,7 +1465,10 @@ async function updateUserBalance(id) {
         Number(input.value);
 
 
-    if (!Number.isFinite(saldo) || saldo < 0) {
+    if (
+        !Number.isFinite(saldo) ||
+        saldo < 0
+    ) {
 
         showNotification(
             "Ingresá un saldo válido"
@@ -1322,7 +1487,7 @@ async function updateUserBalance(id) {
                     method: "POST",
 
                     body: JSON.stringify({
-                        accion: "saldo",
+                        accion: "actualizar_saldo",
                         id_usuario: Number(id),
                         saldo: saldo
                     })
@@ -1482,7 +1647,6 @@ async function login(event) {
 
         currentUser = data.user;
 
-
         updateUserUI();
 
         await loadLibrary();
@@ -1567,7 +1731,6 @@ async function register(event) {
 
 
         currentUser = data.user;
-
 
         updateUserUI();
 
@@ -1690,10 +1853,12 @@ function openProfile() {
 function showSection(section) {
 
     const sections = {
+
         store: "storeSection",
         library: "librarySection",
         history: "historySection",
         admin: "adminSection"
+
     };
 
 
@@ -1748,6 +1913,8 @@ function showSection(section) {
     } else if (section === "admin") {
 
         loadAdminUsers();
+
+        populateAdminGames();
     }
 
 

@@ -18,6 +18,7 @@
             </button>
 
             <nav class="nav">
+
                 <button class="nav-link active" data-section="store">
                     Tienda
                 </button>
@@ -37,6 +38,7 @@
                 >
                     Administración
                 </button>
+
             </nav>
 
             <div class="header-actions">
@@ -135,10 +137,12 @@
             </div>
 
             <div id="libraryGrid" class="games-grid">
+
                 <div class="empty-state">
                     <h2>Tu biblioteca está vacía</h2>
                     <p>Los juegos que compres aparecerán acá.</p>
                 </div>
+
             </div>
 
         </section>
@@ -158,10 +162,12 @@
             </div>
 
             <div id="historyContainer" class="history-container">
+
                 <div class="empty-state">
                     <h2>No hay compras</h2>
                     <p>Tus compras aparecerán acá.</p>
                 </div>
+
             </div>
 
         </section>
@@ -171,26 +177,70 @@
         <section id="adminSection" class="section">
 
             <div class="section-header">
+
                 <div>
                     <p class="eyebrow">ADMINISTRACIÓN</p>
-                    <h1>Usuarios</h1>
+                    <h1>Administración</h1>
                     <p class="section-description">
-                        Administrá el saldo de las cuentas.
+                        Administrá usuarios, saldos y juegos.
                     </p>
                 </div>
+
             </div>
+
 
             <div class="admin-container">
 
+                <!-- USUARIOS -->
                 <div class="admin-toolbar">
-                    <button id="refreshUsersButton" class="secondary-button">
+
+                    <button
+                        id="refreshUsersButton"
+                        class="secondary-button"
+                    >
                         Actualizar usuarios
                     </button>
+
                 </div>
 
+
+                <div class="admin-library-tools">
+
+                    <select id="adminUserSelect">
+                        <option value="">
+                            Seleccionar usuario
+                        </option>
+                    </select>
+
+                    <select id="adminGameSelect">
+                        <option value="">
+                            Seleccionar juego
+                        </option>
+                    </select>
+
+                    <button
+                        id="addGameButton"
+                        class="secondary-button"
+                    >
+                        Agregar a biblioteca
+                    </button>
+
+                    <button
+                        id="removeGameButton"
+                        class="secondary-button"
+                    >
+                        Sacar de biblioteca
+                    </button>
+
+                </div>
+
+                <!-- TABLA USUARIOS -->
                 <div class="users-table-wrapper">
+
                     <table class="users-table">
+
                         <thead>
+
                             <tr>
                                 <th>ID</th>
                                 <th>Usuario</th>
@@ -199,11 +249,14 @@
                                 <th>Saldo</th>
                                 <th>Acción</th>
                             </tr>
+
                         </thead>
 
                         <tbody id="usersTableBody">
                         </tbody>
+
                     </table>
+
                 </div>
 
             </div>
@@ -216,11 +269,15 @@
     <!-- MODAL CARRITO -->
     <div class="modal hidden" id="cartModal">
 
-        <div class="modal-overlay" data-close-modal="cartModal"></div>
+        <div
+            class="modal-overlay"
+            data-close-modal="cartModal"
+        ></div>
 
         <div class="modal-box cart-modal">
 
             <div class="modal-header">
+
                 <div>
                     <p class="eyebrow">COMPRA</p>
                     <h2>Carrito</h2>
@@ -232,10 +289,10 @@
                 >
                     ×
                 </button>
+
             </div>
 
-            <div id="cartItems" class="cart-items">
-            </div>
+            <div id="cartItems" class="cart-items"></div>
 
             <div class="cart-footer">
 
@@ -254,13 +311,17 @@
             </div>
 
         </div>
+
     </div>
 
 
     <!-- MODAL LOGIN / REGISTRO -->
     <div class="modal hidden" id="authModal">
 
-        <div class="modal-overlay" data-close-modal="authModal"></div>
+        <div
+            class="modal-overlay"
+            data-close-modal="authModal"
+        ></div>
 
         <div class="modal-box auth-modal">
 
@@ -316,17 +377,26 @@
                     >
                 </label>
 
-                <button class="primary-button" type="submit">
+                <button
+                    class="primary-button"
+                    type="submit"
+                >
                     Iniciar sesión
                 </button>
 
-                <p class="form-message" id="loginMessage"></p>
+                <p
+                    class="form-message"
+                    id="loginMessage"
+                ></p>
 
             </form>
 
 
             <!-- REGISTRO -->
-            <form id="registerForm" class="auth-form hidden">
+            <form
+                id="registerForm"
+                class="auth-form hidden"
+            >
 
                 <div>
                     <p class="eyebrow">CUENTA</p>
@@ -363,26 +433,37 @@
                     >
                 </label>
 
-                <button class="primary-button" type="submit">
+                <button
+                    class="primary-button"
+                    type="submit"
+                >
                     Crear cuenta
                 </button>
 
-                <p class="form-message" id="registerMessage"></p>
+                <p
+                    class="form-message"
+                    id="registerMessage"
+                ></p>
 
             </form>
 
         </div>
+
     </div>
 
 
     <!-- MODAL PERFIL -->
     <div class="modal hidden" id="profileModal">
 
-        <div class="modal-overlay" data-close-modal="profileModal"></div>
+        <div
+            class="modal-overlay"
+            data-close-modal="profileModal"
+        ></div>
 
         <div class="modal-box profile-modal">
 
             <div class="modal-header">
+
                 <div>
                     <p class="eyebrow">CUENTA</p>
                     <h2>Perfil</h2>
@@ -394,6 +475,7 @@
                 >
                     ×
                 </button>
+
             </div>
 
             <div class="profile-info">
@@ -421,11 +503,15 @@
             </div>
 
         </div>
+
     </div>
 
 
     <!-- NOTIFICACIONES -->
-    <div id="notification" class="notification hidden">
+    <div
+        id="notification"
+        class="notification hidden"
+    >
         <span id="notificationText"></span>
     </div>
 
